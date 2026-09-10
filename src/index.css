@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; }
+body {
+  @apply bg-gym-black text-white font-body antialiased overflow-x-hidden;
+}
+.font-display { font-family: 'Anton', sans-serif; letter-spacing: 0.02em; }
+
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);
+  color: transparent;
+}
+.glass {
+  background: rgba(26,26,30,0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.card-3d:hover {
+  transform: perspective(1000px) rotateY(8deg) rotateX(6deg) translateY(-8px);
+}
+.img-zoom img { transition: transform 0.7s ease; }
+.img-zoom:hover img { transform: scale(1.08); }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0A0A0B; }
+::-webkit-scrollbar-thumb { background: #2A2A30; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #D4FF3F; }
+
+.swiper-pagination-bullet { background: #52525b !important; opacity: 1 !important; }
+.swiper-pagination-bullet-active { background: #D4FF3F !important; width: 28px !important; border-radius: 8px !important; }
