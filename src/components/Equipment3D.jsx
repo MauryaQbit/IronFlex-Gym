@@ -5,6 +5,7 @@ import {
   Environment, Lightformer, MeshReflectorMaterial,
 } from '@react-three/drei'
 import { EffectComposer, Bloom, Vignette, SMAA } from '@react-three/postprocessing'
+import { useInView, useLowPower } from '../hooks/usePerf'
 
 // ---------- MODELS (detailed, performant primitives) ----------
 
@@ -244,22 +245,24 @@ function RackModel({ accent = '#D4FF3F' }) {
   )
 }
 
-function Stage({ children, accent = '#D4FF3F' }) {
+function Stage({ children, accent = '#D4FF3F', lowPower = false }) {
   return (
     <>
       <fog attach="fog" args={['#0b0b0d', 12, 24]} />
       <ambientLight intensity={0.35} />
       <directionalLight
         position={[4, 6, 4]} intensity={2.0}
-        castShadow shadow-mapSize={[2048, 2048]}
+        castShadow shadow-mapSize={lowPower ? [1024, 1024] : [2048, 2048]}
         shadow-camera-left={-6} shadow-camera-right={6}
         shadow-camera-top={6} shadow-camera-bottom={-6}
         shadow-bias={-0.0002}
       />
-      <spotLight position={[-5, 6, 1]} intensity={80} angle={0.55} penumbra={0.85} color={accent} castShadow />
+      <spotLight position={[-5, 6, 1]} intensity={80} angle={0.55} penumbra={0.85} color={accent} castShadow={!lowPower} />
       <spotLight position={[6, 4, -4]} intensity={45} angle={0.6} penumbra={1} color="#FF5A1F" />
       <pointLight position={[0, -0.5, 4.5]} intensity={5} color="#ffffff" />
-      <Sparkles count={80} scale={[9, 4.5, 6]} size={2.4} speed={0.5} opacity={0.5} color={accent} position={[0, 1.5, 0]} />
+      {!lowPower && (
+        <Sparkles count={50} scale={[9, 4.5, 6]} size={2.4} speed={0.5} opacity={0.5} color={accent} position={[0, 1.5, 0]} />
+      )}
 
       {/* Local studio reflections — no network HDR needed */}
       <Environment resolution={256}>
@@ -275,23 +278,30 @@ function Stage({ children, accent = '#D4FF3F' }) {
         {children}
       </Float>
 
-      {/* Mirror gym floor */}
-      <mesh receiveShadow position={[0, -1.68, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[22, 22]} />
-        <MeshReflectorMaterial
-          blur={[280, 60]}
-          resolution={1024}
-          mixBlur={1}
-          mixStrength={16}
-          roughness={0.84}
-          depthScale={1.1}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#0a0a0c"
-          metalness={0.55}
-          mirror={0.5}
-        />
-      </mesh>
+      {/* Gym floor: mirror on desktop, cheap matte on low-power */}
+      {lowPower ? (
+        <mesh receiveShadow position={[0, -1.68, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[22, 22]} />
+          <meshStandardMaterial color="#0a0a0c" metalness={0.35} roughness={0.85} />
+        </mesh>
+      ) : (
+        <mesh receiveShadow position={[0, -1.68, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[22, 22]} />
+          <MeshReflectorMaterial
+            blur={[300, 80]}
+            resolution={512}
+            mixBlur={1}
+            mixStrength={16}
+            roughness={0.84}
+            depthScale={1.1}
+            minDepthThreshold={0.4}
+            maxDepthThreshold={1.4}
+            color="#0a0a0c"
+            metalness={0.55}
+            mirror={0.5}
+          />
+        </mesh>
+      )}
       <ContactShadows position={[0, -1.62, 0]} opacity={0.62} scale={12} blur={2.2} far={4} color="#000000" />
       <Grid
         position={[0, -1.61, 0]}
@@ -367,6 +377,8 @@ export default function Equipment3D() {
   const [tab, setTab] = useState('dumbbell')
   const accent = '#D4FF3F'
   const [autoRotate, setAutoRotate] = useState(true)
+  const [viewRef, inView] = useInView()
+  const lowPower = useLowPower()
   const active = EQUIPMENT.find(t => t.id === tab)
 
   const renderModel = () => {
@@ -392,7 +404,7 @@ export default function Equipment3D() {
             <span className="w-2 h-2 rounded-full bg-gym-lime animate-pulse" /> LIVE WEBGL • 6 MACHINES • TRUE 3D
           </div>
           <h2 className="font-display text-4xl md:text-6xl mt-4">STEP INSIDE<br />THE <span className="text-gym-lime">IRON ZONE</span></h2>
-          <p className="text-zinc-400 mt-4 text-sm">Not photos — live 3D models. Pick a machine, change its color, drag to rotate, scroll to zoom. Same iron you'll lift in our gym.</p>
+          <p className="text-zinc-400 mt-4 text-sm">Not photos — live 3D models. Pick a machine, drag to rotate, scroll to zoom. Same iron you'll lift in our gym.</p>
         </div>
 
         {/* equipment selector */}
@@ -410,11 +422,12 @@ export default function Equipment3D() {
         </div>
 
         <div className="mt-6 grid lg:grid-cols-[1fr_420px] gap-6 items-stretch">
-          {/* 3D viewport */}
-          <div className="min-h-[440px] md:h-[540px] rounded-3xl overflow-hidden bg-gradient-to-b from-[#17171b] via-black to-black border border-white/10 relative">
+          {/* 3D viewport — pauses when scrolled away */}
+          <div ref={viewRef} className="min-h-[440px] md:h-[540px] rounded-3xl overflow-hidden bg-gradient-to-b from-[#17171b] via-black to-black border border-white/10 relative">
             <Canvas
               shadows
-              dpr={[1, 1.75]}
+              dpr={[1, 1.5]}
+              frameloop={inView ? 'always' : 'never'}
               camera={{ position: [0, 0.8, 6.2], fov: 42 }}
               gl={{ antialias: true, toneMappingExposure: 1.12 }}
               onCreated={({ gl }) => {
@@ -423,13 +436,15 @@ export default function Equipment3D() {
               }}
             >
               <Suspense fallback={null}>
-                <Stage accent={accent}>{renderModel()}</Stage>
-                <OrbitControls enableZoom enableDamping dampingFactor={0.08} enablePan={false} autoRotate={autoRotate} autoRotateSpeed={1.4} minDistance={3.2} maxDistance={10} maxPolarAngle={Math.PI / 2 + 0.15} />
-                <EffectComposer multisampling={0}>
-                  <SMAA />
-                  <Bloom intensity={0.5} luminanceThreshold={0.72} luminanceSmoothing={0.2} mipmapBlur radius={0.7} />
-                  <Vignette eskil={false} offset={0.22} darkness={0.76} />
-                </EffectComposer>
+                <Stage accent={accent} lowPower={lowPower}>{renderModel()}</Stage>
+                <OrbitControls enableZoom enableDamping dampingFactor={0.08} enablePan={false} autoRotate={autoRotate && inView} autoRotateSpeed={1.4} minDistance={3.2} maxDistance={10} maxPolarAngle={Math.PI / 2 + 0.15} />
+                {!lowPower && (
+                  <EffectComposer multisampling={0}>
+                    <SMAA />
+                    <Bloom intensity={0.5} luminanceThreshold={0.72} luminanceSmoothing={0.2} mipmapBlur radius={0.7} />
+                    <Vignette eskil={false} offset={0.22} darkness={0.76} />
+                  </EffectComposer>
+                )}
               </Suspense>
             </Canvas>
 

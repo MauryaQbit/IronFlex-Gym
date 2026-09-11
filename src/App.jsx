@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Hero3D from './components/Hero3D'
 import Programs from './components/Programs'
@@ -8,13 +8,19 @@ import Schedule from './components/Schedule'
 import Trainers from './components/Trainers'
 import Transformations from './components/Transformations'
 import Pricing from './components/Pricing'
-import Testimonials from './components/Testimonials'
 import Shop from './components/Shop'
 import Dashboard from './components/Dashboard'
 import CoachChat from './components/CoachChat'
 import Footer from './components/Footer'
-import AuthModal from './components/AuthModal'
 import { AuthProvider, useAuth } from './context/AuthContext'
+
+// Split swiper + auth modal out of the first paint
+const Testimonials = lazy(() => import('./components/Testimonials'))
+const AuthModal = lazy(() => import('./components/AuthModal'))
+
+function SectionFallback() {
+  return <div className="py-16 flex justify-center"><div className="w-10 h-10 rounded-full border-2 border-white/15 border-t-gym-lime animate-spin" /></div>
+}
 
 // Per-user localStorage: bookings/cart/member follow the logged-in user
 function usePerUserLocal(baseKey, initial, uid) {
@@ -107,7 +113,9 @@ function Site() {
       <Trainers onBookTrainer={handleTrainer} />
       <Transformations />
       <Pricing onJoin={handleJoin} />
-      <Testimonials />
+      <Suspense fallback={<SectionFallback />}>
+        <Testimonials />
+      </Suspense>
       <Shop cart={cart} onAdd={handleAddCart} />
       <Dashboard
         bookings={bookings}
@@ -121,7 +129,9 @@ function Site() {
       <Footer />
       <CoachChat />
 
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onSuccess={() => showToast('🔥 Logged in! Bookings & cart now sync to you')} />
+      <Suspense fallback={null}>
+        <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} onSuccess={() => showToast('🔥 Logged in! Bookings & cart now sync to you')} />
+      </Suspense>
 
       {toast && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] px-6 py-3 rounded-full bg-gym-lime text-black text-sm font-bold shadow-2xl animate-bounce whitespace-nowrap max-w-[90vw] overflow-hidden text-ellipsis">

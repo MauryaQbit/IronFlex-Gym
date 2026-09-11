@@ -8,6 +8,7 @@ import { EffectComposer, Bloom, Vignette, SMAA } from '@react-three/postprocessi
 import { motion } from 'framer-motion'
 import { Play, MapPin, Star, Hand, ZoomIn, ZoomOut, RefreshCw, Pause, MousePointerClick } from 'lucide-react'
 import { IMGS } from '../data/gymData'
+import { useInView, useLowPower } from '../hooks/usePerf'
 
 /* Photoreal dumbbell: chrome bar, knurled rubber grip, powder-coated plates
    with clearcoat + env reflections + real cast shadows */
@@ -95,8 +96,9 @@ function InteractiveDumbbell({ accent, autoSpin, dragging }) {
 }
 
 /* Cinematic stage: studio HDRI (local, no network), key+rim lights with
-   shadows, mirror gym floor, fog depth, dust sparkles */
-function Rig({ accent, autoSpin, dragging }) {
+   shadows, mirror gym floor, fog depth, dust sparkles.
+   lowPower (phones/weak CPUs): plain floor, fewer particles, no sparkles. */
+function Rig({ accent, autoSpin, dragging, lowPower }) {
   return (
     <>
       <fog attach="fog" args={['#070708', 11, 22]} />
@@ -104,17 +106,19 @@ function Rig({ accent, autoSpin, dragging }) {
       {/* key light with real shadows */}
       <directionalLight
         position={[5, 7, 5]} intensity={2.1}
-        castShadow shadow-mapSize={[2048, 2048]}
+        castShadow shadow-mapSize={lowPower ? [1024, 1024] : [2048, 2048]}
         shadow-camera-left={-6} shadow-camera-right={6}
         shadow-camera-top={6} shadow-camera-bottom={-6}
         shadow-bias={-0.0002}
       />
-      <spotLight position={[-6, 5, 2]} intensity={90} angle={0.55} penumbra={0.85} color={accent} castShadow />
+      <spotLight position={[-6, 5, 2]} intensity={90} angle={0.55} penumbra={0.85} color={accent} castShadow={!lowPower} />
       <spotLight position={[6, 3.5, -4]} intensity={55} angle={0.6} penumbra={1} color="#FF5A1F" />
       <pointLight position={[0, -0.6, 4.5]} intensity={6} color="#ffffff" />
       <directionalLight position={[-3, 2, -6]} intensity={0.9} color="#9db8ff" />
-      <Stars radius={34} depth={24} count={2200} factor={3.4} saturation={0.4} fade speed={1} />
-      <Sparkles count={110} scale={[9, 5, 6]} size={2.4} speed={0.5} opacity={0.5} color={accent} position={[0, 1, 0]} />
+      <Stars radius={34} depth={24} count={lowPower ? 700 : 1400} factor={3.4} saturation={0.4} fade speed={1} />
+      {!lowPower && (
+        <Sparkles count={60} scale={[9, 5, 6]} size={2.4} speed={0.5} opacity={0.5} color={accent} position={[0, 1, 0]} />
+      )}
 
       {/* Local studio reflections — no HDR download, renders from these strips */}
       <Environment resolution={256}>
@@ -131,23 +135,30 @@ function Rig({ accent, autoSpin, dragging }) {
         <InteractiveDumbbell accent={accent} autoSpin={autoSpin} dragging={dragging} />
       </Float>
 
-      {/* Mirror gym floor — the biggest realism win */}
-      <mesh receiveShadow position={[0, -2.14, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <MeshReflectorMaterial
-          blur={[280, 60]}
-          resolution={1024}
-          mixBlur={1}
-          mixStrength={18}
-          roughness={0.82}
-          depthScale={1.1}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#0a0a0c"
-          metalness={0.6}
-          mirror={0.55}
-        />
-      </mesh>
+      {/* Gym floor: mirror on desktop, cheap matte on low-power */}
+      {lowPower ? (
+        <mesh receiveShadow position={[0, -2.14, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[20, 20]} />
+          <meshStandardMaterial color="#0b0b0d" metalness={0.35} roughness={0.85} />
+        </mesh>
+      ) : (
+        <mesh receiveShadow position={[0, -2.14, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[20, 20]} />
+          <MeshReflectorMaterial
+            blur={[300, 80]}
+            resolution={512}
+            mixBlur={1}
+            mixStrength={18}
+            roughness={0.82}
+            depthScale={1.1}
+            minDepthThreshold={0.4}
+            maxDepthThreshold={1.4}
+            color="#0a0a0c"
+            metalness={0.6}
+            mirror={0.55}
+          />
+        </mesh>
+      )}
       <ContactShadows position={[0, -2.08, 0]} opacity={0.72} scale={13} blur={2.4} far={5} color="#000000" />
       <Grid
         position={[0, -2.07, 0]}
@@ -202,6 +213,8 @@ export default function Hero3D() {
   const [resetKey, setResetKey] = useState(0)
   const controlsRef = useRef()
   const cameraRef = useRef()
+  const [viewRef, inView] = useInView()
+  const lowPower = useLowPower()
 
   const handleStart = useCallback(() => {
     setDragging(true)
@@ -281,7 +294,7 @@ export default function Hero3D() {
         </div>
 
         {/* PHOTOREAL 3D canvas */}
-        <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
+        <motion.div ref={viewRef} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
           onDoubleClick={() => setAutoSpin((s) => !s)}
           className="relative h-[480px] md:h-[560px] rounded-3xl overflow-hidden border border-white/10 glass shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
           <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 rounded-tl-lg z-20 pointer-events-none" style={{ borderColor: accent }} />
@@ -291,7 +304,8 @@ export default function Hero3D() {
 
           <Canvas
             shadows
-            dpr={[1, 1.75]}
+            dpr={[1, 1.5]}
+            frameloop={inView ? 'always' : 'never'}
             camera={{ position: [0, 0.4, 6.4], fov: 48 }}
             gl={{ antialias: true, toneMappingExposure: 1.12 }}
             onCreated={({ camera, gl }) => {
@@ -302,14 +316,16 @@ export default function Hero3D() {
             onPointerMissed={() => setDragging(false)}
           >
             <Suspense fallback={null}>
-              <Rig accent={accent} autoSpin={autoSpin} dragging={dragging} />
+              <Rig accent={accent} autoSpin={autoSpin && inView} dragging={dragging} lowPower={lowPower} />
               <ControlsBridge key={resetKey} controlsRef={controlsRef} cameraRef={cameraRef} onStart={handleStart} onEnd={handleEnd} />
-              {/* cinematic grade */}
-              <EffectComposer multisampling={0}>
-                <SMAA />
-                <Bloom intensity={0.55} luminanceThreshold={0.72} luminanceSmoothing={0.2} mipmapBlur radius={0.7} />
-                <Vignette eskil={false} offset={0.22} darkness={0.78} />
-              </EffectComposer>
+              {/* cinematic grade — desktop only */}
+              {!lowPower && (
+                <EffectComposer multisampling={0}>
+                  <SMAA />
+                  <Bloom intensity={0.55} luminanceThreshold={0.72} luminanceSmoothing={0.2} mipmapBlur radius={0.7} />
+                  <Vignette eskil={false} offset={0.22} darkness={0.78} />
+                </EffectComposer>
+              )}
             </Suspense>
           </Canvas>
 
