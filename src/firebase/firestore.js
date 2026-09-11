@@ -1,9 +1,15 @@
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
-import { db, isFirebaseConfigured } from './config'
+import { getFirebase } from './config'
+
+async function getDb() {
+  const fb = await getFirebase()
+  return fb?.db || null
+}
 
 export async function loadUserData(uid) {
-  if (!isFirebaseConfigured || !db || !uid) return null
+  const db = await getDb()
+  if (!db || !uid) return null
   try {
+    const { doc, getDoc } = await import('firebase/firestore')
     const snap = await getDoc(doc(db, 'users', uid))
     return snap.exists() ? snap.data() : null
   } catch (e) {
@@ -13,8 +19,10 @@ export async function loadUserData(uid) {
 }
 
 export async function saveUserData(uid, data) {
-  if (!isFirebaseConfigured || !db || !uid) return false
+  const db = await getDb()
+  if (!db || !uid) return false
   try {
+    const { doc, setDoc, serverTimestamp } = await import('firebase/firestore')
     await setDoc(
       doc(db, 'users', uid),
       { ...data, updatedAt: serverTimestamp() },

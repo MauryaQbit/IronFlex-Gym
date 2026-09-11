@@ -1,8 +1,5 @@
-import { initializeApp, getApps } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-
-// Reads from Vite env. If keys missing -> demo mode (localStorage auth).
+// Sync env check — no SDK loaded. getFirebase() loads the SDK on demand
+// AFTER first paint, so firebase never blocks initial load.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
@@ -14,20 +11,31 @@ const firebaseConfig = {
 
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId)
 
-let app = null
-let auth = null
-let db = null
-let googleProvider = null
+let cached = null
 
-if (isFirebaseConfigured) {
-  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig)
-  auth = getAuth(app)
-  db = getFirestore(app)
-  googleProvider = new GoogleAuthProvider()
-} else {
+export function getFirebase() {
+  if (!isFirebaseConfigured) return Promise.resolve(null)
+  if (!cached) {
+    cached = (async () => {
+      const [{ initializeApp, getApps }, { getAuth, GoogleAuthProvider }, { getFirestore }] = await Promise.all([
+        import('firebase/app'),
+        import('firebase/auth'),
+        import('firebase/firestore'),
+      ])
+      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig)
+      return {
+        app,
+        auth: getAuth(app),
+        db: getFirestore(app),
+        googleProvider: new GoogleAuthProvider(),
+      }
+    })()
+  }
+  return cached
+}
+
+if (!isFirebaseConfigured) {
   console.warn(
     '[IronFlex] Firebase keys missing — running in DEMO auth mode (localStorage). Add VITE_FIREBASE_* to .env to enable real Firebase.'
   )
 }
-
-export { app, auth, db, googleProvider, firebaseConfig }
