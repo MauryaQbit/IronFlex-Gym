@@ -10,7 +10,7 @@ export default function Programs() {
           <div className="text-gym-lime text-sm font-bold tracking-widest">🔥 TRAIN YOUR WAY</div>
           <h2 className="font-display text-4xl md:text-5xl mt-2">PROGRAMS WITH <span className="text-gym-lime">REAL RESULTS</span></h2>
         </div>
-        <p className="text-zinc-400 max-w-sm text-sm">Hover cards for 3D tilt. All programs include diet chart + progress tracking.</p>
+        <p className="text-zinc-400 max-w-sm text-sm">All programs include diet chart + progress tracking.</p>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {programs.map((p, i) => (

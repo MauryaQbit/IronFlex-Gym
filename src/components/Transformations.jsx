@@ -35,9 +35,9 @@ export default function Transformations() {
             <div className="absolute top-4 left-4 text-xs px-3 py-1 rounded-full bg-black/70">BEFORE</div>
             <div className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-gym-lime text-black font-bold">AFTER</div>
           </div>
-          <div className="mt-4 grid grid-cols-4 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-1.5 sm:gap-2">
             {gallery.slice(0, 8).map((g, i) => (
-              <img key={i} src={g} loading="lazy" alt="gym gallery" className="h-20 w-full object-cover rounded-xl border border-white/10 hover:border-gym-lime hover:scale-105 transition" />
+              <img key={i} src={g} loading="lazy" alt="gym gallery" className="h-14 sm:h-20 w-full object-cover rounded-xl border border-white/10 hover:border-gym-lime hover:scale-105 transition" />
             ))}
           </div>
         </div>

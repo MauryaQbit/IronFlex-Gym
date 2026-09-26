@@ -23,7 +23,7 @@ export default function Schedule({ bookings, onBook }) {
                   <span className="flex items-center gap-1"><User size={12} /> {s.trainer}</span>
                 </div>
                 <button onClick={() => onBook(s.id)} disabled={booked}
-                  className={`mt-4 w-full py-2.5 rounded-full text-sm font-bold transition ${booked ? 'bg-green-500/20 text-green-400 border border-green-500/40' : 'bg-white text-black hover:bg-gym-lime'}`}>
+                  className={`mt-4 w-full py-3 rounded-full text-sm font-bold transition min-h-[44px] ${booked ? 'bg-green-500/20 text-green-400 border border-green-500/40' : 'bg-white text-black hover:bg-gym-lime'}`}>
                   {booked ? '✓ Booked' : 'Book Seat'}
                 </button>
               </div>

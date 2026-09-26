@@ -3,7 +3,7 @@ import { Dumbbell, Globe, Share2, AtSign, MapPin, Phone } from 'lucide-react'
 export default function Footer() {
   return (
     <footer className="border-t border-gym-border bg-black">
-      <div className="max-w-7xl mx-auto px-4 py-14 grid md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-10 sm:py-14 grid sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-gym-lime flex items-center justify-center"><Dumbbell className="text-black" /></div>
@@ -12,7 +12,7 @@ export default function Footer() {
           <p className="text-sm text-zinc-400 mt-4">India's most interactive gym website. Real iron, real coaches, real 3D experience.</p>
           <div className="mt-4 flex gap-3">
             {[Globe, Share2, AtSign].map((Icon, i) => (
-              <a key={i} href="#top" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gym-lime hover:text-black transition"><Icon size={18} /></a>
+              <a key={i} href="#top" aria-label="Social link" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-gym-lime hover:text-black transition"><Icon size={18} /></a>
             ))}
           </div>
         </div>
@@ -37,8 +37,8 @@ export default function Footer() {
           <div className="font-bold mb-4">Get Free Trial Pass</div>
           <p className="text-sm text-zinc-400">Drop your WhatsApp, we send 1-day pass in 5 mins.</p>
           <form onSubmit={e => { e.preventDefault(); alert('Trial pass sent on WhatsApp!') }} className="mt-3 flex gap-2">
-            <input required placeholder="WhatsApp number" className="flex-1 px-4 py-2.5 rounded-full bg-white/10 border border-white/10 text-sm outline-none focus:border-gym-lime" />
-            <button className="px-5 py-2.5 rounded-full bg-gym-lime text-black text-sm font-bold">Send</button>
+            <input required placeholder="WhatsApp number" inputMode="tel" autoComplete="tel" className="flex-1 px-4 py-3 rounded-full bg-white/10 border border-white/10 text-sm outline-none focus:border-gym-lime min-h-[48px]" />
+            <button className="px-5 py-3 rounded-full bg-gym-lime text-black text-sm font-bold min-h-[48px]">Send</button>
           </form>
           <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&auto=format&fit=crop" alt="gym real" className="mt-4 h-24 w-full object-cover rounded-2xl border border-white/10" />
         </div>

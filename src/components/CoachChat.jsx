@@ -50,27 +50,27 @@ export default function CoachChat() {
   return (
     <>
       {/* AI Coach button (right) */}
-      <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 group">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3 group">
         <span className="hidden group-hover:block text-xs font-bold px-3 py-2 rounded-full bg-black/80 border border-white/15 backdrop-blur whitespace-nowrap">
           Ask Flex AI 🤖
         </span>
-        <button onClick={() => { setOpen(!open); setWaOpen(false) }}
-          className="w-14 h-14 rounded-full bg-gym-lime text-black flex items-center justify-center shadow-[0_0_25px_rgba(212,255,63,0.5)] hover:scale-110 transition">
+        <button onClick={() => { setOpen(!open); setWaOpen(false) }} aria-label="Open AI coach"
+          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gym-lime text-black flex items-center justify-center shadow-[0_0_25px_rgba(212,255,63,0.5)] hover:scale-110 transition">
           {open ? <X /> : <MessageCircle />}
         </button>
       </div>
 
       {/* WhatsApp button (left) - improved */}
-      <div className="fixed bottom-6 left-6 z-50 flex items-center gap-3 group">
+      <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 flex items-center gap-3 group">
         <button onClick={() => { setWaOpen(!waOpen); setOpen(false) }}
           aria-label="Chat on WhatsApp"
-          className="relative w-15 h-15 p-0 rounded-full hover:scale-110 active:scale-95 transition-transform duration-200"
-          style={{ width: 60, height: 60 }}>
+          className="relative rounded-full hover:scale-110 active:scale-95 transition-transform duration-200"
+          style={{ width: 52, height: 52 }}>
           {/* pulse rings */}
           <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-25" />
           <span className="absolute -inset-1 rounded-full bg-[#25D366]/30 blur-md" />
           {/* main button */}
-          <span className="relative flex items-center justify-center w-[60px] h-[60px] rounded-full text-white shadow-[0_8px_30px_rgba(37,211,102,0.5)] border border-white/20"
+          <span className="relative flex items-center justify-center w-[52px] h-[52px] sm:w-[60px] sm:h-[60px] rounded-full text-white shadow-[0_8px_30px_rgba(37,211,102,0.5)] border border-white/20"
             style={{ background: 'linear-gradient(135deg,#25D366 0%,#128C7E 100%)' }}>
             {waOpen ? <X size={26} /> : <WhatsAppIcon size={30} />}
           </span>
@@ -90,7 +90,7 @@ export default function CoachChat() {
 
       {/* WhatsApp chat card */}
       {waOpen && (
-        <div className="fixed bottom-24 left-6 z-50 w-[350px] max-w-[92vw] rounded-3xl overflow-hidden border border-white/10 bg-[#0b141a] shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
+        <div className="fixed bottom-20 sm:bottom-24 left-4 sm:left-6 z-50 w-[350px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden border border-white/10 bg-[#0b141a] shadow-[0_20px_60px_rgba(0,0,0,0.6)]">
           {/* header */}
           <div className="p-4 flex items-center gap-3 text-white" style={{ background: 'linear-gradient(135deg,#075E54,#128C7E)' }}>
             <div className="relative">
@@ -138,7 +138,7 @@ export default function CoachChat() {
 
       {/* AI Coach panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-[340px] max-w-[90vw] rounded-3xl overflow-hidden border border-gym-border bg-gym-card shadow-2xl">
+        <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 w-[340px] max-w-[calc(100vw-2rem)] rounded-3xl overflow-hidden border border-gym-border bg-gym-card shadow-2xl">
           <div className="p-4 bg-gym-lime text-black font-bold flex items-center gap-2"><Bot size={20} /> Flex AI Coach <span className="ml-auto text-[11px] bg-black text-gym-lime px-2 py-1 rounded-full">ONLINE</span></div>
           <div className="h-72 overflow-auto p-4 space-y-3">
             {msgs.map((m, i) => (

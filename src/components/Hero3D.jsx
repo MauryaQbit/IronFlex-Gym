@@ -78,7 +78,7 @@ export default function Hero3D() {
             <span className="w-2 h-2 rounded-full bg-gym-lime animate-pulse" /> LIVE • 2,400+ MEMBERS TRAINING
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="font-display text-5xl md:text-7xl leading-[0.95] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+            className="font-display text-4xl sm:text-5xl md:text-7xl leading-[0.95] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
             SCULPT YOUR<br />
             <span className="text-gym-lime">BEAST MODE</span><br />
             <span className="text-stroke">IN 3D POWER</span>
@@ -86,17 +86,17 @@ export default function Hero3D() {
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-6 text-zinc-300 max-w-md">
             Real equipment. Real trainers. Real results. Grab the 3D dumbbell — drag it, spin it — then book your free trial.
           </motion.p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a href="#pricing" className="px-8 py-4 rounded-full bg-gym-lime text-black font-extrabold hover:scale-105 transition shadow-[0_0_30px_rgba(212,255,63,0.4)]">START FREE TRIAL 💪</a>
-            <a href="#equipment" className="px-8 py-4 rounded-full glass border border-white/20 font-bold flex items-center gap-2 hover:border-gym-lime"><Play size={18} /> 3D GYM TOUR</a>
+          <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
+            <a href="#pricing" className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gym-lime text-black font-extrabold hover:scale-105 transition shadow-[0_0_30px_rgba(212,255,63,0.4)] text-sm sm:text-base min-h-[48px] flex items-center">START FREE TRIAL 💪</a>
+            <a href="#equipment" className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-full glass border border-white/20 font-bold flex items-center gap-2 hover:border-gym-lime text-sm sm:text-base min-h-[48px]"><Play size={18} /> 3D GYM TOUR</a>
           </div>
-          <div className="mt-10 grid grid-cols-3 max-w-md gap-4">
+          <div className="mt-8 sm:mt-10 grid grid-cols-3 gap-2 sm:gap-4">
             {[
               ['5000+', 'Sq Ft Area'], ['25+', 'Expert Coaches'], ['4.9', 'Google Rating'],
             ].map(([n, l]) => (
-              <div key={l} className="glass rounded-2xl p-4 text-center border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.45)]">
-                <div className="font-display text-2xl text-gym-lime">{n}</div>
-                <div className="text-xs text-zinc-400">{l}</div>
+              <div key={l} className="glass rounded-2xl p-3 sm:p-4 text-center border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.45)]">
+                <div className="font-display text-xl sm:text-2xl text-gym-lime">{n}</div>
+                <div className="text-[10px] sm:text-xs text-zinc-400">{l}</div>
               </div>
             ))}
           </div>
@@ -109,7 +109,7 @@ export default function Hero3D() {
         {/* PHOTOREAL 3D canvas — streams in after paint */}
         <motion.div ref={viewRef} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }}
           onDoubleClick={() => setAutoSpin((s) => !s)}
-          className="relative h-[480px] md:h-[560px] rounded-3xl overflow-hidden border border-white/10 glass shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
+          className="relative h-[320px] sm:h-[400px] md:h-[560px] rounded-3xl overflow-hidden border border-white/10 glass shadow-[0_20px_80px_rgba(0,0,0,0.6)]">
           <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 rounded-tl-lg z-20 pointer-events-none" style={{ borderColor: accent }} />
           <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 rounded-tr-lg z-20 pointer-events-none" style={{ borderColor: accent }} />
           <div className="absolute bottom-20 left-3 w-6 h-6 border-b-2 border-l-2 rounded-bl-lg z-20 pointer-events-none" style={{ borderColor: accent }} />
@@ -163,18 +163,18 @@ export default function Hero3D() {
                 {interacted ? 'Nice! Scroll = zoom' : 'Drag = rotate • Scroll = zoom'}
               </div>
               <div className="flex items-center gap-1.5 ml-auto">
-                <button onClick={() => zoom('in')} title="Zoom in" className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:border-gym-lime hover:text-gym-lime transition">
-                  <ZoomIn size={15} />
+                <button onClick={() => zoom('in')} title="Zoom in" aria-label="Zoom in" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:border-gym-lime hover:text-gym-lime transition">
+                  <ZoomIn size={16} />
                 </button>
-                <button onClick={() => zoom('out')} title="Zoom out" className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:border-gym-lime hover:text-gym-lime transition">
-                  <ZoomOut size={15} />
+                <button onClick={() => zoom('out')} title="Zoom out" aria-label="Zoom out" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:border-gym-lime hover:text-gym-lime transition">
+                  <ZoomOut size={16} />
                 </button>
-                <button onClick={() => setAutoSpin(!autoSpin)} title="Toggle idle spin"
-                  className={`h-8 px-3 rounded-full text-[11px] font-black flex items-center gap-1.5 border transition ${autoSpin ? 'bg-gym-lime text-black border-gym-lime' : 'bg-white/10 border-white/10 hover:border-gym-lime'}`}>
+                <button onClick={() => setAutoSpin(!autoSpin)} title="Toggle idle spin" aria-label="Toggle spin"
+                  className={`h-10 px-3 rounded-full text-[11px] font-black flex items-center gap-1.5 border transition ${autoSpin ? 'bg-gym-lime text-black border-gym-lime' : 'bg-white/10 border-white/10 hover:border-gym-lime'}`}>
                   {autoSpin ? <><Pause size={13} /> SPIN ON</> : <><Play size={13} /> SPIN OFF</>}
                 </button>
-                <button onClick={resetView} title="Reset view" className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:rotate-180 hover:border-gym-lime transition-all duration-500">
-                  <RefreshCw size={15} />
+                <button onClick={resetView} title="Reset view" aria-label="Reset view" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:rotate-180 hover:border-gym-lime transition-all duration-500">
+                  <RefreshCw size={16} />
                 </button>
               </div>
             </div>

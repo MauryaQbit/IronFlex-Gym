@@ -8,7 +8,7 @@ export default function Trainers({ onBookTrainer }) {
       <div className="text-center">
         <div className="text-gym-lime text-sm font-bold tracking-widest">💪 REAL COACHES</div>
         <h2 className="font-display text-4xl md:text-5xl mt-2">MEET YOUR <span className="text-gym-lime">TRAINERS</span></h2>
-        <p className="text-zinc-400 text-sm mt-2">Certified, real humans. Hover for 3D flip effect.</p>
+        <p className="text-zinc-400 text-sm mt-2">Certified, real humans. Book a session to get started.</p>
       </div>
       <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {trainers.map((t, i) => (

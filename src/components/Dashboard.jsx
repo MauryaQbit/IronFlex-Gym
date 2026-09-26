@@ -89,7 +89,7 @@ export default function Dashboard({ bookings, cart, member, onRemoveBooking, onR
                 <div className="text-xs text-zinc-400">{user.email} • {user.provider}</div>
                 {member?.plan && <div className="text-xs text-gym-lime font-bold mt-0.5">Plan: {member.plan} {member.phone ? `• ${member.phone}` : ''}</div>}
               </div>
-              <button onClick={logout} className="px-5 py-2.5 rounded-full bg-white/10 border border-white/10 text-sm font-bold flex items-center gap-2 hover:bg-red-500 transition">
+              <button onClick={logout} className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-sm font-bold flex items-center gap-2 hover:bg-red-500 transition min-h-[44px]">
                 <LogOut size={15} /> Logout
               </button>
             </>
@@ -99,7 +99,7 @@ export default function Dashboard({ bookings, cart, member, onRemoveBooking, onR
                 <div className="font-bold">You're browsing as guest 👀</div>
                 <div className="text-xs text-zinc-400">Login to sync bookings, cart & weight across devices with Firebase.</div>
               </div>
-              <button onClick={onLoginClick} className="px-6 py-2.5 rounded-full bg-gym-lime text-black text-sm font-bold hover:scale-105 transition">Login / Sign Up</button>
+              <button onClick={onLoginClick} className="px-6 py-3 rounded-full bg-gym-lime text-black text-sm font-bold hover:scale-105 transition min-h-[44px]">Login / Sign Up</button>
             </>
           )}
         </div>
@@ -142,8 +142,8 @@ export default function Dashboard({ bookings, cart, member, onRemoveBooking, onR
           <div className="rounded-3xl bg-gym-card border border-gym-border p-6">
             <h3 className="font-bold flex items-center gap-2"><TrendingUp size={18} className="text-gym-lime" /> Weight Tracker</h3>
             <div className="mt-4 flex gap-2">
-              <input value={weight} onChange={e => setWeight(e.target.value)} type="number" placeholder="kg" className="flex-1 px-4 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm outline-none focus:border-gym-lime" />
-              <button onClick={addWeight} className="px-5 py-2.5 rounded-xl bg-white text-black text-sm font-bold hover:bg-gym-lime">Log</button>
+              <input value={weight} onChange={e => setWeight(e.target.value)} type="number" inputMode="decimal" placeholder="kg" className="flex-1 px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-sm outline-none focus:border-gym-lime min-h-[48px]" />
+              <button onClick={addWeight} className="px-5 py-3 rounded-xl bg-white text-black text-sm font-bold hover:bg-gym-lime min-h-[48px]">Log</button>
             </div>
             <div className="mt-4 flex items-end gap-1.5 h-28">
               {logs.length === 0 && <div className="text-xs text-zinc-500">Log weight to see progress chart.</div>}

@@ -5,8 +5,14 @@
 html { scroll-behavior: smooth; }
 body {
   @apply bg-gym-black text-white font-body antialiased overflow-x-hidden;
+  -webkit-tap-highlight-color: transparent;
 }
+section[id] { scroll-margin-top: 80px; }
 .font-display { font-family: 'Anton', sans-serif; letter-spacing: 0.02em; }
+button, a, input, select, textarea { touch-action: manipulation; }
+@media (max-width: 640px) {
+  input[type="range"] { height: 28px; }
+}
 
 .text-stroke {
   -webkit-text-stroke: 1.5px rgba(255,255,255,0.35);

@@ -44,7 +44,7 @@ export default function BMICalculator() {
             </div>
             <div className="bg-gym-lime text-black rounded-2xl p-5 text-sm font-medium">💡 {plan}</div>
           </div>
-          <a href="#pricing" className="mt-5 block text-center py-3 rounded-full bg-white text-black font-bold hover:bg-gym-lime transition">Get My Custom Plan</a>
+          <a href="#pricing" className="mt-5 block text-center py-3.5 rounded-full bg-white text-black font-bold hover:bg-gym-lime transition min-h-[48px] flex items-center justify-center">Get My Custom Plan</a>
         </div>
       </div>
     </section>

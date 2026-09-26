@@ -71,7 +71,7 @@ export default function AuthModal({ open, onClose, onSuccess }) {
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-3xl bg-gym-card border border-gym-border overflow-hidden">
+      <div className="relative w-full max-w-md mx-4 rounded-3xl bg-gym-card border border-gym-border overflow-hidden max-h-[90vh] overflow-y-auto">
         <div className="h-36 relative">
           <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop" alt="gym" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1E] to-black/30" />
@@ -94,33 +94,33 @@ export default function AuthModal({ open, onClose, onSuccess }) {
 
           <form onSubmit={submit} className="space-y-3">
             {mode === 'signup' && (
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
-                <UserIcon size={16} className="text-zinc-500" />
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" className="bg-transparent outline-none text-sm flex-1" />
+              <div className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
+                <UserIcon size={16} className="text-zinc-500 shrink-0" />
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" autoComplete="name" className="bg-transparent outline-none text-sm flex-1 min-w-0" />
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
-              <Mail size={16} className="text-zinc-500" />
-              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="Email" className="bg-transparent outline-none text-sm flex-1" />
+            <div className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
+              <Mail size={16} className="text-zinc-500 shrink-0" />
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" required placeholder="Email" autoComplete="email" className="bg-transparent outline-none text-sm flex-1 min-w-0" />
             </div>
-            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
-              <Lock size={16} className="text-zinc-500" />
-              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={6} placeholder="Password (6+ chars)" className="bg-transparent outline-none text-sm flex-1" />
+            <div className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-black/50 border border-white/10 focus-within:border-gym-lime">
+              <Lock size={16} className="text-zinc-500 shrink-0" />
+              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" required minLength={6} placeholder="Password (6+ chars)" autoComplete="current-password" className="bg-transparent outline-none text-sm flex-1 min-w-0" />
             </div>
 
             {err && <div className="text-xs bg-red-500/15 border border-red-500/40 text-red-300 px-4 py-2.5 rounded-xl">⚠️ {err}</div>}
 
-            <button disabled={busy} className="w-full py-3 rounded-full bg-gym-lime text-black font-bold hover:scale-[1.02] transition disabled:opacity-60">
+            <button disabled={busy} className="w-full py-3.5 rounded-full bg-gym-lime text-black font-bold hover:scale-[1.02] transition disabled:opacity-60 min-h-[48px]">
               {busy ? 'Please wait...' : mode === 'login' ? 'Login 💪' : 'Create Account 🔥'}
             </button>
           </form>
 
           <div className="my-4 text-center text-xs text-zinc-500">OR</div>
 
-          <button onClick={google} disabled={busy} className="w-full py-3 rounded-full bg-white text-black text-sm font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition">
+          <button onClick={google} disabled={busy} className="w-full py-3.5 rounded-full bg-white text-black text-sm font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition min-h-[48px]">
             <span className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 via-red-500 to-yellow-500 text-white text-xs font-black flex items-center justify-center">G</span> Continue with Google
           </button>
-          <button onClick={guest} disabled={busy} className="mt-2 w-full py-2.5 rounded-full bg-white/10 border border-white/10 text-sm hover:border-gym-lime transition">
+          <button onClick={guest} disabled={busy} className="mt-2 w-full py-3 rounded-full bg-white/10 border border-white/10 text-sm hover:border-gym-lime transition min-h-[48px]">
             Continue as Guest
           </button>
 

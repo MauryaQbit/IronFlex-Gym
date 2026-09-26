@@ -71,15 +71,15 @@ export default function Equipment3D() {
         </div>
 
         {/* equipment selector */}
-        <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="mt-6 sm:mt-8 grid grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
           {EQUIPMENT.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
               className={`group rounded-2xl overflow-hidden border text-left transition-all hover:-translate-y-1 ${tab === t.id ? 'border-gym-lime shadow-[0_0_25px_rgba(212,255,63,0.25)]' : 'border-white/10 hover:border-white/30'}`}>
-              <div className="h-20 md:h-24 overflow-hidden relative">
+              <div className="h-16 sm:h-20 md:h-24 overflow-hidden relative">
                 <img src={t.img} alt={t.short} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
                 {tab === t.id && <div className="absolute inset-0 bg-gym-lime/20" />}
               </div>
-              <div className={`text-[11px] md:text-xs font-bold px-2 py-2 text-center ${tab === t.id ? 'bg-gym-lime text-black' : 'bg-gym-card'}`}>{t.short}</div>
+              <div className={`text-[10px] sm:text-[11px] md:text-xs font-bold px-1.5 sm:px-2 py-1.5 sm:py-2 text-center ${tab === t.id ? 'bg-gym-lime text-black' : 'bg-gym-card'}`}>{t.short}</div>
             </button>
           ))}
         </div>
@@ -151,10 +151,10 @@ export default function Equipment3D() {
         </div>
 
         {/* bottom strip */}
-        <div className="mt-6 rounded-2xl border border-gym-lime/25 bg-gym-lime/5 px-5 py-4 flex flex-wrap items-center gap-3 text-sm">
-          <span className="font-display text-lg">5000 SQ FT • 25+ COACHES • OPEN 5AM–11PM</span>
-          <span className="text-zinc-400 text-xs">Come touch the real iron — first trial free. This 3D tour is 1:1 with our floor.</span>
-          <a href="#pricing" className="ml-auto px-5 py-2 rounded-full bg-gym-lime text-black text-xs font-black hover:scale-105 transition">BOOK FREE TRIAL →</a>
+        <div className="mt-4 sm:mt-6 rounded-2xl border border-gym-lime/25 bg-gym-lime/5 px-4 sm:px-5 py-3 sm:py-4 flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+          <span className="font-display text-sm sm:text-lg">5000 SQ FT • 25+ COACHES • OPEN 5AM–11PM</span>
+          <span className="text-zinc-400 text-xs hidden sm:inline">Come touch the real iron — first trial free.</span>
+          <a href="#pricing" className="ml-auto px-4 sm:px-5 py-2.5 rounded-full bg-gym-lime text-black text-xs font-black hover:scale-105 transition min-h-[44px] inline-flex items-center">BOOK FREE TRIAL →</a>
         </div>
       </div>
     </section>
