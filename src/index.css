@@ -6,10 +6,12 @@ html { scroll-behavior: smooth; }
 body {
   @apply bg-gym-black text-white font-body antialiased overflow-x-hidden;
   -webkit-tap-highlight-color: transparent;
+  min-width: 320px;
 }
 section[id] { scroll-margin-top: 80px; }
 .font-display { font-family: 'Anton', sans-serif; letter-spacing: 0.02em; }
 button, a, input, select, textarea { touch-action: manipulation; }
+img { max-width: 100%; height: auto; }
 @media (max-width: 640px) {
   input[type="range"] { height: 28px; }
 }
